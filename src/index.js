@@ -1,14 +1,12 @@
 import React from 'react';
-import {View,Text} from 'react-native';
-
-// import { Container } from './styles';
+import Routes from './routes';
+import {StatusBar} from 'react-native';
 
 export default function App() {
   return (
-    <View>
-      <Text>
-        Instagram
-      </Text>
-    </View>
-    )
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F5F5" />
+      <Routes />
+    </>
+  );
 }
