@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, RefreshControl} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {Post, Header, Avatar, Name, PostImage, Description, Loading} from './styles';
@@ -50,8 +50,9 @@ export default function Feed() {
         keyExtractor={post => String(post.id)}
         onEndReached={() => loadPage()}
         onEndReachedThreshold={0.1}
-        onRefresh={refreshList}
-        refreshing={refreshing}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refreshList}/>
+        }
         ListFooterComponent={loading && <Loading />}
         renderItem={({item}) => (
           <Post>
