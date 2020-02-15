@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, RefreshControl} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
@@ -12,6 +12,7 @@ export default function Feed() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [viewable, setViewable] = useState([]);
 
   async function loadPage(pageNumber = page, shouldRefresh = false) {
     if(total && pageNumber > total) return;
@@ -44,6 +45,10 @@ export default function Feed() {
 
     setRefreshing(false)
   }
+                             //hooks do tipo que não é recriado
+  const handleViewableChanged = useCallback(({ changed }) => {
+    setViewable(changed.map(({ item }) => item.id))
+  },[])
 
   return (
     <View>
@@ -55,6 +60,8 @@ export default function Feed() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refreshList}/>
         }
+        onViewableItemsChanged={handleViewableChanged}
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 30 }}
         ListFooterComponent={loading && <Loading />}
         renderItem={({item}) => (
           <Post>
@@ -64,6 +71,7 @@ export default function Feed() {
             </Header>
 
             <LazyImage 
+              shouldLoad={viewable.includes(item.id)}
               aspectRatio={item.aspectRatio} 
               smallSource={{ uri: item.small }}
               source={{uri: item.image}} 
